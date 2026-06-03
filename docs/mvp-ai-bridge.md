@@ -15,6 +15,8 @@
 npm run dev              # Moodcam web + API Realtime opcional
 npm run ai:bridge        # Worker persistente MQTT/OpenAI
 npm run robot:simulator  # Simulador de receptor ESP32
+npm run demo:robot       # AI Bridge + simulador ESP32 en una terminal
+npm run demo:session     # Sesion MQTT falsa para smoke test
 ```
 
 El worker debe vivir en un proceso persistente tipo VPS, Render worker o Fly Machine. Vercel/Netlify siguen siendo adecuados para la web, pero no para mantener una suscripción MQTT viva indefinidamente.
@@ -28,6 +30,8 @@ MQTT_DEVICE_ID=device1
 MQTT_URL=wss://broker.hivemq.com:8884/mqtt
 MQTT_USERNAME=
 MQTT_PASSWORD=
+MQTT_COMMAND_DELAY_MS=60
+ESP32_SIMULATOR_DELAY_MS=80
 ```
 
 ## Topics

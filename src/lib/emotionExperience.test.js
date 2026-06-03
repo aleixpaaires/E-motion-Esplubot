@@ -48,6 +48,10 @@ test('prepara perfiles de pintor con videos placeholder y respuestas', () => {
 
   assert.equal(painter.id, 'kandinsky')
   assert.ok(painter.questions.length > 0)
+  assert.ok(painter.openingLine.includes('Kandinsky'))
+  assert.ok(painter.heygenNotes.includes('No imitar voz real'))
   assert.ok(response.video.src.includes('/painters/placeholders/kandinsky/confused.mp4'))
   assert.equal(response.video.ready, false)
+  assert.ok(response.script.includes('robot'))
+  assert.ok(response.actionCue.length > 0)
 })

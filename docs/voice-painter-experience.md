@@ -52,7 +52,9 @@ Cada pintor tiene:
 - `style`
 - `styleLabel`
 - `avatar`
+- `openingLine`
 - `questions`
+- `heygenNotes`
 - `videos`
 - `responses`
 
@@ -63,6 +65,8 @@ Los vídeos apuntan por ahora a rutas placeholder:
 ```
 
 Cuando existan vídeos HeyGen reales, se pueden subir a `public/painters/...` o cambiar las rutas en `src/lib/painterProfiles.js`.
+
+Los guiones temporales estan documentados en [guiones-heygen-pintores.md](guiones-heygen-pintores.md) y tambien viven en `src/lib/painterProfiles.js` para que la app muestre exactamente el texto previsto para los clips.
 
 ## Flujo MVP
 

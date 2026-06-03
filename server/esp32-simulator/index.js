@@ -1,9 +1,12 @@
-import 'dotenv/config'
 import mqtt from 'mqtt'
 import { DEFAULT_DEVICE_ID, TOPIC_KEYS, createTopicMap, normalizeDeviceId, parseJsonMessage } from '../../src/lib/mqttContract.js'
+import { loadServerEnv } from '../loadEnv.js'
+
+loadServerEnv()
 
 const deviceId = normalizeDeviceId(process.env.MQTT_DEVICE_ID || process.env.MOODCAM_DEVICE_ID || DEFAULT_DEVICE_ID)
 const mqttUrl = process.env.MQTT_URL || process.env.MQTT_BROKER_URL || 'wss://broker.hivemq.com:8884/mqtt'
+const commandDelayMs = clampNumber(process.env.ESP32_SIMULATOR_DELAY_MS, 0, 5000, 80)
 const topics = createTopicMap(deviceId)
 
 const client = mqtt.connect(mqttUrl, {
@@ -33,10 +36,11 @@ client.on('message', async (_topic, message) => {
   })
 
   if (Array.isArray(command.points)) {
-    command.points.forEach((point) => {
+    for (const point of command.points) {
       moveTo(point.x, point.y, point.z)
       setBrush(Boolean(point.brush))
-    })
+      await sleep(commandDelayMs)
+    }
   }
 
   if (typeof command.speed === 'number') setSpeed(command.speed)
@@ -83,4 +87,14 @@ function setBrush(active) {
 
 function setSpeed(value) {
   console.log(`setSpeed(${value})`)
+}
+
+function clampNumber(value, min, max, fallback) {
+  const parsed = Number(value)
+  if (!Number.isFinite(parsed)) return fallback
+  return Math.max(min, Math.min(max, parsed))
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }

@@ -1,5 +1,7 @@
-import 'dotenv/config'
 import express from 'express'
+import { loadServerEnv } from './loadEnv.js'
+
+loadServerEnv()
 
 const PORT = Number(process.env.MOODCAM_API_PORT || 8787)
 const REALTIME_URL = 'https://api.openai.com/v1/realtime/calls'
@@ -81,7 +83,7 @@ app.get('/api/health', (_req, res) => {
 app.post('/api/realtime/session', async (req, res) => {
   if (!process.env.OPENAI_API_KEY) {
     res.status(500).json({
-      error: 'OPENAI_API_KEY no está configurada en .env',
+      error: 'OPENAI_API_KEY no esta configurada en .env.local o .env',
     })
     return
   }

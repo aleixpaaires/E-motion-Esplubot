@@ -8,6 +8,29 @@ Moodcam uses machine learning models running entirely in the browser to detect f
 
 ---
 
+## MVP robot flow
+
+The current MVP is prepared for a first ESP32 test:
+
+```txt
+Moodcam web -> HiveMQ -> AI Bridge/OpenAI -> HiveMQ -> ESP32 or simulator
+```
+
+Useful demo commands:
+
+```bash
+npm run dev           # web + optional local API
+npm run demo:robot    # AI Bridge + ESP32 simulator
+npm run demo:session  # publish a fake Moodcam session through HiveMQ
+```
+
+See:
+
+- [ESP32 test runbook](docs/prueba-manana-esp32.md)
+- [AI Bridge contract](docs/mvp-ai-bridge.md)
+- [Voice and painter experience](docs/voice-painter-experience.md)
+- [Temporary HeyGen scripts](docs/guiones-heygen-pintores.md)
+
 ## ✨ Features
 
 - **Real-time face detection** — Detects faces from the webcam feed using the BlazeFace and FaceMesh models.

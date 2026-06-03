@@ -10,6 +10,8 @@ export function selectPainterResponse({ painterId, emotion = 'neutral' }) {
     painter,
     emotion: response?.emotion || 'neutral',
     text: response?.text || 'Voy a observar tu emoción y convertirla en trazos.',
+    script: response?.script || '',
+    actionCue: response?.actionCue || '',
     video,
   }
 }

@@ -148,8 +148,17 @@ npm run ai:bridge
 npm run robot:simulator
 ```
 
+Para probar el flujo sin cámara:
+
+```bash
+npm run demo:robot    # AI Bridge + simulador ESP32
+npm run demo:session  # publica una sesión falsa por HiveMQ
+```
+
+Consulta [docs/prueba-manana-esp32.md](docs/prueba-manana-esp32.md) para la prueba completa de mañana.
 Consulta [docs/mvp-ai-bridge.md](docs/mvp-ai-bridge.md) para topics, payloads y despliegue del worker persistente.
 Consulta [docs/voice-painter-experience.md](docs/voice-painter-experience.md) para el módulo de voz, categorías emocionales simples y placeholders HeyGen.
+Consulta [docs/guiones-heygen-pintores.md](docs/guiones-heygen-pintores.md) para los guiones temporales de cada pintor.
 
 ### Build para Producción
 

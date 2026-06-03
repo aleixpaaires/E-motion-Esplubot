@@ -36,7 +36,7 @@ export function startAiBridge(config = loadBridgeConfig()) {
         rememberSession(payload)
         const latestFaceEmotion = getSession(payload.session_id)?.latestFaceEmotion
         const decision = await decideArtPlan({ sessionSummary: payload, latestFaceEmotion, config })
-        const publishResult = publishPlanAndCommands(client, config, decision.plan)
+        const publishResult = await publishPlanAndCommands(client, config, decision.plan)
 
         if (decision.source === 'local_fallback') {
           publishBridgeError(client, config, {

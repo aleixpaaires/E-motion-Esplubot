@@ -9,6 +9,8 @@
     "dev:server": "node server/index.js",
     "ai:bridge": "node server/ai-bridge/index.js",
     "robot:simulator": "node server/esp32-simulator/index.js",
+    "demo:robot": "node scripts/demo-stack.mjs",
+    "demo:session": "node scripts/mqtt-smoke-session.mjs",
     "build": "vite build",
     "lint": "eslint .",
     "test": "node --test \"src/lib/*.test.js\" \"server/**/*.test.js\"",

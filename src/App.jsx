@@ -11,6 +11,7 @@ import ConversationPanel from './components/ConversationPanel'
 import VoiceEmotionPanel from './components/VoiceEmotionPanel'
 import RobotCalibrationPanel from './components/RobotCalibrationPanel'
 import PainterVideoManager from './components/PainterVideoManager'
+import DemoReadinessPanel from './components/DemoReadinessPanel'
 import { calculateEmotionSummary, generateArtPlan, getArtistById } from './lib/artEngine'
 import { DEFAULT_CONVERSATION_MODE, getConversationMode } from './lib/conversationModes'
 import { createSessionId } from './lib/mqttContract'
@@ -397,6 +398,14 @@ function App() {
 
       <main className="flex-1 w-full max-w-6xl mx-auto p-4 space-y-5">
         <StepStrip active={activeStep} currentStep={currentStep} canOpenStep={canOpenStep} onSelect={goToStep} />
+        <DemoReadinessPanel
+          mqttStatus={connectionStatus}
+          aiPlan={lastAiPlan}
+          robotStatus={lastRobotStatus}
+          voiceStatus={voiceStatus}
+          painter={selectedPainterProfile}
+          sessionActive={sessionActive}
+        />
 
         {currentStep === 1 && (
           <Screen title="1. Elegir pintor" description="Primero se selecciona el artista que definirá cómo se moverá y pintará el brazo.">

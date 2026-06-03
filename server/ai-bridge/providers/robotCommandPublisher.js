@@ -1,12 +1,13 @@
 import { TOPIC_KEYS, createRobotCommandSequence } from '../../../src/lib/mqttContract.js'
 
-export function publishPlanAndCommands(client, config, plan) {
+export async function publishPlanAndCommands(client, config, plan) {
   publishJson(client, config.topics[TOPIC_KEYS.strokePlan], plan, { qos: 1 })
 
   const commandMessages = createRobotCommandSequence(plan)
-  commandMessages.forEach((command) => {
+  for (const command of commandMessages) {
     publishJson(client, config.topics[TOPIC_KEYS.robotCommand], command, { qos: 1 })
-  })
+    if (config.commandDelayMs > 0) await sleep(config.commandDelayMs)
+  }
 
   return {
     planTopic: config.topics[TOPIC_KEYS.strokePlan],
@@ -26,4 +27,8 @@ export function publishBridgeError(client, config, payload) {
 
 function publishJson(client, topic, payload, options) {
   client.publish(topic, JSON.stringify(payload), options)
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }

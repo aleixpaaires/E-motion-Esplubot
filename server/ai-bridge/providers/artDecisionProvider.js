@@ -3,6 +3,7 @@ import { resolveSessionEmotions } from './emotionProvider.js'
 import { resolveVoiceProvider } from './voiceProvider.js'
 
 const OPENAI_RESPONSES_URL = 'https://api.openai.com/v1/responses'
+const ART_EMOTIONS = ['happy', 'neutral', 'sad', 'angry', 'fear', 'disgust', 'surprise']
 
 const DECISION_SCHEMA = {
   type: 'object',
@@ -129,6 +130,7 @@ async function requestOpenAiDecision({ artist, sessionSummary, mainEmotions, con
               voice_emotions: sessionSummary?.voice_emotions || [],
               color_preferences: sessionSummary?.voice_summary?.color_preferences || [],
               keywords: sessionSummary?.voice_summary?.keywords || [],
+              transcript: (sessionSummary?.transcript || []).slice(-6),
               mobility: sessionSummary?.mobility,
               conversation_mode: sessionSummary?.conversation_mode,
             },
@@ -154,7 +156,7 @@ async function requestOpenAiDecision({ artist, sessionSummary, mainEmotions, con
   const data = JSON.parse(responseText)
   const outputText = extractOutputText(data)
   if (!outputText) throw new Error('OpenAI no devolvió texto JSON.')
-  return JSON.parse(outputText)
+  return normalizeDecision(JSON.parse(outputText))
 }
 
 function extractOutputText(response) {
@@ -175,4 +177,33 @@ function stampPlan(plan, sessionSummary, source) {
     decision_source: source,
     validated_by: 'artEngine',
   }
+}
+
+function normalizeDecision(decision) {
+  if (!decision || typeof decision !== 'object') {
+    throw new Error('La decision IA no es un objeto JSON.')
+  }
+
+  const primary = sanitizeEmotion(decision.primary_emotion, 'neutral')
+  const secondary = sanitizeEmotion(decision.secondary_emotion, primary)
+  const colorPreferences = Array.isArray(decision.color_preferences)
+    ? decision.color_preferences
+      .filter((value) => typeof value === 'string')
+      .map((value) => value.trim())
+      .filter(Boolean)
+      .slice(0, 5)
+    : []
+
+  return {
+    primary_emotion: primary,
+    secondary_emotion: secondary,
+    mobility: clamp(decision.mobility, 20, 100),
+    color_preferences: colorPreferences,
+    style_directive: String(decision.style_directive || 'Pintar una respuesta emocional segura dentro de A4.')
+      .slice(0, 500),
+  }
+}
+
+function sanitizeEmotion(value, fallback) {
+  return ART_EMOTIONS.includes(value) ? value : fallback
 }
