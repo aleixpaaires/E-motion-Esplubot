@@ -17,6 +17,9 @@ loadServerEnv()
 const deviceId = normalizeDeviceId(process.env.MQTT_DEVICE_ID || process.env.MOODCAM_DEVICE_ID || DEFAULT_DEVICE_ID)
 const mqttUrl = process.env.MQTT_URL || process.env.MQTT_BROKER_URL || 'wss://broker.hivemq.com:8884/mqtt'
 const topics = createTopicMap(deviceId)
+if (process.env.MQTT_ROBOT_COMMAND_TOPIC?.trim()) {
+  topics[TOPIC_KEYS.robotCommand] = process.env.MQTT_ROBOT_COMMAND_TOPIC.trim()
+}
 const sessionId = createSessionId(deviceId)
 const timeoutMs = Number(process.env.MQTT_SMOKE_TIMEOUT_MS || 45_000)
 
@@ -30,10 +33,11 @@ const client = mqtt.connect(mqttUrl, {
 })
 
 let sawPlan = false
+let sawRobotCommand = false
 let sawRobotStatus = false
 
 const timer = setTimeout(() => {
-  console.error(`Smoke timeout: plan=${sawPlan} robotStatus=${sawRobotStatus}`)
+  console.error(`Smoke timeout: plan=${sawPlan} robotCommand=${sawRobotCommand} robotStatus=${sawRobotStatus}`)
   client.end(true, () => process.exit(1))
 }, timeoutMs)
 
@@ -41,6 +45,7 @@ client.on('connect', () => {
   console.log(`Smoke conectado a ${mqttUrl} para ${deviceId}`)
   client.subscribe([
     topics[TOPIC_KEYS.strokePlan],
+    topics[TOPIC_KEYS.robotCommand],
     topics[TOPIC_KEYS.robotStatus],
     topics[TOPIC_KEYS.systemError],
   ], { qos: 1 }, (error) => {
@@ -62,13 +67,18 @@ client.on('message', (topic, message) => {
     console.log(`Robot status: ${payload.status} ${payload.command_type || ''}`.trim())
   }
 
+  if (topic === topics[TOPIC_KEYS.robotCommand]) {
+    sawRobotCommand = true
+    console.log(`Robot command en ${topic}: ${payload.type} ${payload.sequence_index || ''}`.trim())
+  }
+
   if (topic === topics[TOPIC_KEYS.systemError]) {
     console.log(`Sistema: ${payload.severity || 'info'} ${payload.message || JSON.stringify(payload)}`)
   }
 
-  if (sawPlan && sawRobotStatus) {
+  if (sawPlan && (sawRobotCommand || sawRobotStatus)) {
     clearTimeout(timer)
-    console.log('Smoke OK: AI Bridge publico plan y el simulador respondio.')
+    console.log('Smoke OK: AI Bridge publico plan y comandos robot.')
     client.end(true, () => process.exit(0))
   }
 })
