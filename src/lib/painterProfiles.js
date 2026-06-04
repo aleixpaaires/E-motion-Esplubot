@@ -5,7 +5,7 @@ const SIMPLE_VIDEO_EMOTIONS = ['neutral', 'joyful', 'calm', 'sad', 'nervous', 't
 
 const PAINTER_SCRIPT_DATA = {
   kandinsky: {
-    avatar: '/logo-esplubot.png',
+    avatar: '/e-motion-symbol.png',
     callTheme: 'formas, ritmo y color',
     openingLine: 'Hola, soy tu guia Kandinsky. Vamos a escuchar tu emocion como si fuera musica y convertirla en formas.',
     questions: [
@@ -24,7 +24,7 @@ const PAINTER_SCRIPT_DATA = {
     },
   },
   pollock: {
-    avatar: '/logo-esplubot.png',
+    avatar: '/e-motion-symbol.png',
     callTheme: 'accion, energia y gesto',
     openingLine: 'Estoy listo para mover la pintura. Respira, dime que energia quieres soltar y la convertiremos en gesto.',
     questions: [
@@ -43,7 +43,7 @@ const PAINTER_SCRIPT_DATA = {
     },
   },
   rothko: {
-    avatar: '/logo-esplubot.png',
+    avatar: '/e-motion-symbol.png',
     callTheme: 'campos de color y calma',
     openingLine: 'Miremos el color como un lugar. Dime que sientes y construiremos una superficie tranquila para sostenerlo.',
     questions: [
@@ -62,7 +62,7 @@ const PAINTER_SCRIPT_DATA = {
     },
   },
   'alma-thomas': {
-    avatar: '/logo-esplubot.png',
+    avatar: '/e-motion-symbol.png',
     callTheme: 'luz, mosaico y naturaleza',
     openingLine: 'Vamos a pintar como si la emocion fuera luz atravesando pequenas piezas de color.',
     questions: [
@@ -81,7 +81,7 @@ const PAINTER_SCRIPT_DATA = {
     },
   },
   'de-kooning': {
-    avatar: '/logo-esplubot.png',
+    avatar: '/e-motion-symbol.png',
     callTheme: 'gesto, curva y transformacion',
     openingLine: 'No hace falta que la emocion este ordenada. Dime que quieres transformar y lo llevaremos al gesto.',
     questions: [
@@ -139,7 +139,7 @@ function buildPlaceholderVideos(painterId) {
     emotion,
     label: emotion,
     src: `${PLACEHOLDER_VIDEO_BASE}/${painterId}/${emotion}.mp4`,
-    poster: '/logo-esplubot.png',
+    poster: '/e-motion-wordmark.png',
     provider: 'heygen-placeholder',
     ready: false,
   }))

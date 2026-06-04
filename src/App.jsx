@@ -366,8 +366,7 @@ function App() {
         </a>
         <div className="text-center">
           <div className="flex items-center justify-center gap-3">
-            <img src="/logo-esplubot.png" alt="Esplubot" className="w-10 h-10 rounded-full shadow-md" />
-            <h1 className="text-2xl font-bold text-white">Moodcam</h1>
+            <img src="/e-motion-wordmark.png" alt="E-motion" className="h-12 w-auto max-w-[210px] rounded-md object-contain shadow-md" />
           </div>
           <p className="text-xs text-zinc-500 mt-1">captura emocional · AI Bridge · robot A4</p>
         </div>

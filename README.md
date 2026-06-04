@@ -1,4 +1,4 @@
-# 🎭 Moodcam by Esplubot
+# 🎭 E-motion
 
 **Real-time emotion detection web app powered by AI and your webcam.**
 
@@ -58,7 +58,9 @@ See:
 ```
 moodcam/
 ├── public/
-│   ├── logo-esplubot.png          # App logo / favicon
+│   ├── e-motion-logo.png          # Full source logo
+│   ├── e-motion-wordmark.png      # Header wordmark
+│   ├── e-motion-symbol.png        # Favicon / compact avatar
 │   └── models/                    # Pre-trained ML model files
 │       ├── blazeface.{json,bin}   # Face detection model
 │       ├── facemesh.{json,bin}    # Face mesh / landmark model

@@ -22,7 +22,7 @@ export default function PainterVideoManager({ painter, response, emotionLabel })
             <div className="flex items-center justify-center border-r border-white/10">
               <div className="relative">
                 <div className="absolute inset-0 rounded-full bg-amber-300/20 blur-xl" />
-                <img src={painter.avatar} alt={painter.name} className="relative w-24 h-24 rounded-full border border-white/15 shadow-lg object-cover" />
+                <img src={painter.avatar} alt={painter.name} className="relative w-24 h-24 rounded-full border border-white/15 bg-black/30 p-2 shadow-lg object-contain" />
               </div>
             </div>
             <div className="flex flex-col justify-center p-5 min-w-0">

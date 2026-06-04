@@ -54,7 +54,7 @@ function ProjectPage() {
 
   useEffect(() => {
     const previousTitle = document.title
-    document.title = 'Moodcam Proyecto - Esplubot'
+    document.title = 'E-motion Proyecto'
     return () => {
       document.title = previousTitle
     }
@@ -68,7 +68,7 @@ function ProjectPage() {
         <section className="project-hero" aria-labelledby="project-title">
           <ProjectRender />
           <div className="project-hero__content project-reveal is-visible">
-            <p className="project-kicker">Esplubot</p>
+            <p className="project-kicker">E-motion</p>
             <h1 id="project-title">Una camara que convierte emociones en pintura robotica</h1>
             <p className="project-hero__lead">
               Nuestro proyecto une vision artificial, voz en tiempo real, arte generativo y un brazo Arduino
@@ -204,8 +204,8 @@ function ProjectPage() {
       </main>
 
       <footer className="project-footer">
-        <img src="/logo-esplubot.png" alt="Esplubot" />
-        <span>Moodcam por Esplubot · IA emocional · arte generativo · robot A4</span>
+        <img src="/e-motion-wordmark.png" alt="E-motion" />
+        <span>E-motion · IA emocional · arte generativo · robot A4</span>
       </footer>
     </div>
   )
@@ -215,8 +215,7 @@ function ProjectNav() {
   return (
     <nav className="project-nav" aria-label="Navegacion del proyecto">
       <a className="project-brand" href="/">
-        <img src="/logo-esplubot.png" alt="Esplubot" />
-        <span>Esplubot</span>
+        <img src="/e-motion-wordmark.png" alt="E-motion" />
       </a>
       <div>
         <a href="#arquitectura">Arquitectura</a>

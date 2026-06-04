@@ -1,4 +1,4 @@
-# 🎭 Moodcam por Esplubot
+# 🎭 E-motion
 
 **Aplicación web de detección de emociones en tiempo real mediante IA y tu webcam.**
 
@@ -42,7 +42,9 @@ Moodcam utiliza modelos de aprendizaje automático en el navegador para detectar
 ```
 moodcam/
 ├── public/
-│   ├── logo-esplubot.png          # Logo / favicon de la app
+│   ├── e-motion-logo.png          # Logo completo original
+│   ├── e-motion-wordmark.png      # Wordmark para cabeceras
+│   ├── e-motion-symbol.png        # Favicon / avatar compacto
 │   └── models/                    # Archivos de modelos ML pre-entrenados
 │       ├── blazeface.{json,bin}   # Modelo de detección facial
 │       ├── facemesh.{json,bin}    # Modelo de malla facial / landmarks

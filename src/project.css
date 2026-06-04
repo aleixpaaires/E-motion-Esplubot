@@ -54,9 +54,12 @@
 }
 
 .project-brand img {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
+  width: 150px;
+  height: 44px;
+  border-radius: 6px;
+  object-fit: contain;
+  background: rgba(255, 255, 255, 0.06);
+  filter: brightness(1.28) contrast(1.12);
 }
 
 .project-nav div a {
@@ -532,9 +535,12 @@
 }
 
 .project-footer img {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
+  width: 150px;
+  height: 46px;
+  border-radius: 6px;
+  object-fit: contain;
+  background: rgba(255, 255, 255, 0.06);
+  filter: brightness(1.28) contrast(1.12);
 }
 
 .project-reveal {
