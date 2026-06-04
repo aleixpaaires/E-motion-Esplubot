@@ -1,4 +1,5 @@
 import mqtt from 'mqtt'
+import { pathToFileURL } from 'node:url'
 import { TOPIC_KEYS, parseJsonMessage } from '../../src/lib/mqttContract.js'
 import { buildMqttOptions, loadBridgeConfig } from './config.js'
 import { decideArtPlan } from './providers/artDecisionProvider.js'
@@ -86,6 +87,6 @@ function getSession(sessionId) {
   return sessions.get(sessionId || 'latest') || null
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   startAiBridge()
 }
