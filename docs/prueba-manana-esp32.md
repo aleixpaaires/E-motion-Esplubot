@@ -26,6 +26,7 @@ MQTT_DEVICE_ID=device1
 MQTT_URL=wss://broker.hivemq.com:8884/mqtt
 MQTT_USERNAME=
 MQTT_PASSWORD=
+MQTT_ROBOT_COMMAND_TOPIC=robot/test
 MQTT_COMMAND_DELAY_MS=60
 ESP32_SIMULATOR_DELAY_MS=80
 ```
@@ -93,10 +94,10 @@ system/{deviceId}/error
 
 ## Contrato minimo para ESP32
 
-La ESP32 debe escuchar:
+La ESP32 de la prueba actual debe escuchar:
 
 ```txt
-robot/{deviceId}/command
+robot/test
 ```
 
 Y publicar:

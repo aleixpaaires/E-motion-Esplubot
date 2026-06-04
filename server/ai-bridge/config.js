@@ -5,6 +5,9 @@ loadServerEnv()
 
 export function loadBridgeConfig(env = process.env) {
   const deviceId = normalizeDeviceId(env.MQTT_DEVICE_ID || env.MOODCAM_DEVICE_ID || DEFAULT_DEVICE_ID)
+  const topics = createTopicMap(deviceId)
+  applyTopicOverrides(topics, env)
+
   return {
     deviceId,
     mqttUrl: env.MQTT_URL || env.MQTT_BROKER_URL || 'wss://broker.hivemq.com:8884/mqtt',
@@ -13,7 +16,7 @@ export function loadBridgeConfig(env = process.env) {
     openaiApiKey: env.OPENAI_API_KEY || '',
     openaiModel: env.OPENAI_DECISION_MODEL || 'gpt-4.1-mini',
     commandDelayMs: clampNumber(env.MQTT_COMMAND_DELAY_MS, 0, 5000, 60),
-    topics: createTopicMap(deviceId),
+    topics,
   }
 }
 
@@ -45,4 +48,21 @@ function clampNumber(value, min, max, fallback) {
   const parsed = Number(value)
   if (!Number.isFinite(parsed)) return fallback
   return Math.max(min, Math.min(max, parsed))
+}
+
+function applyTopicOverrides(topics, env) {
+  const overrides = {
+    sessionStart: env.MQTT_SESSION_START_TOPIC,
+    faceEmotion: env.MQTT_FACE_EMOTION_TOPIC,
+    sessionSummary: env.MQTT_SESSION_SUMMARY_TOPIC,
+    strokePlan: env.MQTT_STROKE_PLAN_TOPIC,
+    robotCommand: env.MQTT_ROBOT_COMMAND_TOPIC,
+    robotStatus: env.MQTT_ROBOT_STATUS_TOPIC,
+    systemError: env.MQTT_SYSTEM_ERROR_TOPIC,
+    moodcamStatus: env.MQTT_MOODCAM_STATUS_TOPIC,
+  }
+
+  Object.entries(overrides).forEach(([key, value]) => {
+    if (typeof value === 'string' && value.trim()) topics[key] = value.trim()
+  })
 }
