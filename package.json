@@ -13,7 +13,7 @@
     "demo:session": "node scripts/mqtt-smoke-session.mjs",
     "build": "vite build",
     "lint": "eslint .",
-    "test": "node --test \"src/lib/*.test.js\" \"server/**/*.test.js\"",
+    "test": "node --test \"src/lib/*.test.js\" \"server/**/*.test.js\" \"tests/*.js\"",
     "preview": "vite preview"
   },
   "dependencies": {
