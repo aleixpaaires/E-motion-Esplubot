@@ -19,19 +19,6 @@
       "minLength": 1,
       "maxLength": 120
     },
-    "artist": {
-      "type": "string",
-      "enum": ["kandinsky", "pollock", "rothko", "alma-thomas", "de-kooning"]
-    },
-    "emotion": {
-      "type": "string",
-      "enum": ["happy", "sad", "angry", "calm", "fear", "surprise", "neutral"]
-    },
-    "base_function": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 80
-    },
     "speed": {
       "type": "integer",
       "minimum": 0,
@@ -71,4 +58,3 @@
     }
   }
 }
-

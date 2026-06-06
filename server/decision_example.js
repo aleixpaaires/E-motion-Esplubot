@@ -69,9 +69,7 @@ export function buildDecisionContext(input, catalog = loadStrokes()) {
     .filter((stroke) => stroke.artist === artist)
     .map((stroke) => ({
       stroke_id: stroke.stroke_id,
-      artist: stroke.artist,
       emotion: stroke.emotion,
-      base_function: stroke.base_function,
       speed: stroke.speed,
       intensity: stroke.intensity,
       duration_ms: stroke.duration_ms,
@@ -200,4 +198,3 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const validated = validateDecision(decision)
   console.log(JSON.stringify({ prompt: buildDecisionPrompt(input), decision, validated }, null, 2))
 }
-

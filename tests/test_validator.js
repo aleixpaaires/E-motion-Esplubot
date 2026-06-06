@@ -6,9 +6,6 @@ import { validateDecision } from '../server/validator.js'
 
 const validDecision = {
   stroke_id: 'pollock-angry-simulated-splash-v1',
-  artist: 'pollock',
-  emotion: 'angry',
-  base_function: 'pollockSimulatedSplash',
   speed: 54,
   intensity: 80,
   duration_ms: 1200,
@@ -46,10 +43,10 @@ test('rechaza un stroke_id inventado sin producir comando', () => {
   assert.match(result.error, /stroke_id no aprobado/)
 })
 
-test('rechaza artista, emoción o función que no coincidan con la receta', () => {
-  assert.match(validateDecision({ ...validDecision, artist: 'rothko' }).error, /artist no coincide/)
-  assert.match(validateDecision({ ...validDecision, emotion: 'happy' }).error, /emotion no coincide/)
-  assert.match(validateDecision({ ...validDecision, base_function: 'inventedAction' }).error, /base_function no coincide/)
+test('rechaza metadatos internos enviados por la IA', () => {
+  assert.match(validateDecision({ ...validDecision, artist: 'pollock' }).error, /Campos inesperados o peligrosos/)
+  assert.match(validateDecision({ ...validDecision, emotion: 'angry' }).error, /Campos inesperados o peligrosos/)
+  assert.match(validateDecision({ ...validDecision, base_function: 'pollockSimulatedSplash' }).error, /Campos inesperados o peligrosos/)
 })
 
 test('rechaza valores globales fuera de 0 a 100', () => {
@@ -90,7 +87,7 @@ test('rechaza campos obligatorios ausentes y valores no enteros', () => {
   assert.match(validateDecision({ ...validDecision, speed: 45.5 }).error, /speed debe ser un número entero/)
 })
 
-test('normaliza un comando validado para ESP32 sin exigir stroke_id', () => {
+test('rechaza base_function directo en modo producción', () => {
   const result = normalizeAndValidateForEsp32({
     base_function: 'pollockSplash',
     speed: 80,
@@ -100,22 +97,62 @@ test('normaliza un comando validado para ESP32 sin exigir stroke_id', () => {
     selected_colors: ['rojo', 'negro'],
   })
 
-  assert.equal(result.valid, true)
-  assert.equal(result.command.base_function, 'pollockSplash')
+  assert.equal(result.valid, false)
+  assert.match(result.error, /base_function directo está prohibido/)
 })
 
-test('sendToEsp32 simula por defecto y no envia comandos invalidos', async () => {
-  const simulated = await sendToEsp32({
+test('rechaza base_function aunque venga junto a stroke_id en modo producción', () => {
+  const result = normalizeAndValidateForEsp32({
+    stroke_id: 'pollock-angry-simulated-splash-v1',
+    base_function: 'pollockSimulatedSplash',
+    speed: 54,
+    intensity: 80,
+    duration_ms: 1200,
+    pressure: 42,
+    selected_colors: ['rojo', 'negro'],
+  })
+
+  assert.equal(result.valid, false)
+  assert.match(result.error, /campos no permitidos/)
+})
+
+test('TEST_MODE no mezcla stroke_id con metadatos internos', () => {
+  const result = normalizeAndValidateForEsp32({
+    ...validDecision,
+    base_function: 'pollockSimulatedSplash',
+  }, loadStrokes(), { testMode: true })
+
+  assert.equal(result.valid, false)
+  assert.match(result.error, /Campos inesperados o peligrosos/)
+})
+
+test('TEST_MODE permite pruebas manuales con base_function directo', () => {
+  const result = normalizeAndValidateForEsp32({
     base_function: 'pollockSplash',
     speed: 80,
     intensity: 75,
     duration_ms: 6000,
     pressure: 40,
     selected_colors: ['rojo', 'negro'],
+  }, loadStrokes(), { testMode: true })
+
+  assert.equal(result.valid, true)
+  assert.equal(result.command.base_function, 'pollockSplash')
+})
+
+test('sendToEsp32 simula por defecto usando stroke_id y no envia comandos invalidos', async () => {
+  const simulated = await sendToEsp32({
+    stroke_id: 'pollock-angry-simulated-splash-v1',
+    speed: 54,
+    intensity: 80,
+    duration_ms: 1200,
+    pressure: 42,
+    selected_colors: ['rojo', 'negro'],
   })
   assert.equal(simulated.valid, true)
   assert.equal(simulated.mode, 'simulation')
   assert.equal(simulated.status, 'completed')
+  assert.equal(simulated.sent.command.base_function, 'pollockSimulatedSplash')
 
   const rejected = await sendToEsp32({
     base_function: 'inventedAction',

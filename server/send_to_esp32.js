@@ -12,6 +12,8 @@ const COMMAND_FIELDS = new Set([
   'selected_colors',
 ])
 
+const TEST_MODE_ENABLED_VALUES = new Set(['1', 'true', 'yes', 'on'])
+
 // Transporte inicial seguro:
 // - Sin ESP32_SERIAL_PORT: simula el envío y no toca hardware.
 // - Con ESP32_SERIAL_PORT: escribe una línea JSON por USB/Serial.
@@ -19,8 +21,9 @@ export async function sendToEsp32(input, {
   serialPort = process.env.ESP32_SERIAL_PORT || '',
   catalog = loadStrokes(),
   transport = null,
+  testMode = isTestModeEnabled(process.env.TEST_MODE),
 } = {}) {
-  const validated = normalizeAndValidateForEsp32(input, catalog)
+  const validated = normalizeAndValidateForEsp32(input, catalog, { testMode })
   if (!validated.valid) return validated
 
   const packet = {
@@ -63,14 +66,32 @@ export async function sendToEsp32(input, {
   }
 }
 
-export function normalizeAndValidateForEsp32(input, catalog = loadStrokes()) {
+export function normalizeAndValidateForEsp32(input, catalog = loadStrokes(), { testMode = false } = {}) {
   if (!input || typeof input !== 'object' || Array.isArray(input)) {
     return { valid: false, error: 'El comando debe ser un objeto JSON.' }
   }
 
-  // Si llega una decisión con stroke_id, reutilizamos el validador estricto.
+  // Producción: la única entrada aceptada es una decisión con stroke_id.
+  // El backend deriva base_function usando validator.js y /strokes.
   if (input.stroke_id) {
+    if (!testMode) {
+      const forbiddenDecisionFields = ['base_function', 'artist', 'emotion']
+        .filter((field) => input[field] !== undefined)
+      if (forbiddenDecisionFields.length) {
+        return {
+          valid: false,
+          error: `Modo producción: campos no permitidos en decisión IA: ${forbiddenDecisionFields.join(', ')}`,
+        }
+      }
+    }
     return validateDecision(input, catalog)
+  }
+
+  if (!testMode) {
+    return {
+      valid: false,
+      error: 'Modo producción: base_function directo está prohibido. Usa stroke_id y validator.js.',
+    }
   }
 
   const unexpected = Object.keys(input).filter((field) => !COMMAND_FIELDS.has(field))
@@ -130,10 +151,14 @@ function inRange(value, min, max) {
   return value >= min && value <= max
 }
 
+function isTestModeEnabled(value) {
+  return TEST_MODE_ENABLED_VALUES.has(String(value || '').trim().toLowerCase())
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const raw = process.argv[2]
   if (!raw) {
-    console.error('Uso: node server/send_to_esp32.js \'{"base_function":"pollockSplash",...}\'')
+    console.error('Uso: node server/send_to_esp32.js \'{"stroke_id":"pollock-angry-simulated-splash-v1",...}\'')
     process.exit(1)
   }
   const input = JSON.parse(raw)

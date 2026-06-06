@@ -2,9 +2,6 @@ import { loadStrokes } from './load_strokes.js'
 
 const ALLOWED_FIELDS = new Set([
   'stroke_id',
-  'artist',
-  'emotion',
-  'base_function',
   'speed',
   'intensity',
   'duration_ms',
@@ -52,10 +49,6 @@ export function validateDecision(decision, catalog = loadStrokes()) {
       fail(`Función base no aprobada: ${stroke.base_function}`)
     }
 
-    assertOptionalMatch(decision, 'artist', stroke.artist)
-    assertOptionalMatch(decision, 'emotion', stroke.emotion)
-    assertOptionalMatch(decision, 'base_function', stroke.base_function)
-
     assertIntegerRange(decision.speed, 'speed', 0, 100)
     assertIntegerRange(decision.intensity, 'intensity', 0, 100)
     assertIntegerRange(decision.duration_ms, 'duration_ms', 1, Number.MAX_SAFE_INTEGER)
@@ -99,12 +92,6 @@ function assertAllowedFields(decision) {
 function assertRequiredFields(decision) {
   const missing = REQUIRED_FIELDS.filter((field) => decision[field] === undefined)
   if (missing.length) fail(`Faltan campos obligatorios: ${missing.join(', ')}`)
-}
-
-function assertOptionalMatch(decision, field, expected) {
-  if (decision[field] !== undefined && decision[field] !== expected) {
-    fail(`${field} no coincide con la receta aprobada.`)
-  }
 }
 
 function assertIntegerRange(value, field, min, max) {
@@ -165,4 +152,3 @@ function normalizeText(value) {
 function fail(message) {
   throw new Error(message)
 }
-
